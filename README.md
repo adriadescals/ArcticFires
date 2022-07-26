@@ -7,7 +7,7 @@ The repository is organized as follows:
 	- Classification of annual burned areas with Landsat-7 and -8 (subfolder “gee/AnnualClassif_Arctic/Landsat78”) 
 	- Extraction of metrics for the sample-based validation of burned area maps
 	- Estimation of land surface phenology maps using MODIS and GIMMS NDVI
-	- Download of time series of fire regime factors
+	- Download of fire regime factor time series
 
 - The folder “main” contains Matlab code and data for:
 	- Main analysis of the article, including the detection of ignitions, analysis of trends in factors of fire, analysis of sensitivity of annual burned area to factors of fire, estimation of past fire emissions, projection of burned area and fire emissions.
