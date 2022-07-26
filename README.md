@@ -1,4 +1,4 @@
-## This repository contains the code used for the analyses in the paper "Unprecedented fire activity above the Arctic Circle linked to rising temperatures"
+### This repository contains the code used for the analyses in the paper "Unprecedented fire activity above the Arctic Circle linked to rising temperatures"
 
 The repository is organized as follows:
 
