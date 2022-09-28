@@ -15,6 +15,6 @@ The repository is organized as follows:
 	- Plots presented in the paper.
 	- The folder also contains the R script “u01_SEM.R” for structural equation modeling. 
 
-- The zip files “Arctic_BA_Sentinel2_2019-2020_v1-1.zip” and “Arctic_BA_Landsat78_2019-2020_v1-1.zip” contain the geotiff files for the 2019 and 2020 burned area maps created using Sentinel-2 and Landsat-7 and -8 images. Burned area maps can be visualized at https://adriadescals.users.earthengine.app/view/arctic-burnedarea-sentinel2
+- The zip files “Arctic_BA_Sentinel2_2019-2020_v1-1.zip” and “Arctic_BA_Landsat78_2019-2020_v1-1.zip” contain the geotiff files for the 2019 and 2020 burned area maps created using Sentinel-2 and Landsat-7 and -8 images. These burned area maps can be visualized at https://adriadescals.users.earthengine.app/view/arctic-burnedarea-sentinel2
 
 Adrià Descals - a.descals@creaf.uab.cat CREAF - Centre de Recerca Ecològica i Aplicacions Forestals
