@@ -6,7 +6,7 @@ library(semPlot)
 setwd("G:/My Drive/_ARCTIC_FIRES/_CODE/R1/CLEANED/MAIN/DATA")
 
 # import the data directly from s3 bucket
-dat <- read.csv(file = "ARCTIC_TRENDS_merged_v3-3.csv")
+dat <- read.csv(file = "ARCTIC_TRENDS_merged_v1.csv")
 
 head(dat)
 
@@ -16,15 +16,8 @@ cor(dat)
 plot(dat)
 
 
-
 #_________________________________________________________________________________
-
-# CFI = 0.958 and NNFI/TLI = 0.935 values around the recommended cut-off criterion of >0.97/0.95 
-# RMSEA = 0.055 is slightly above the cut-off of 0.05, but it is not significantly higher than 0.05 (90 % CI = [0.029; 0.079]). 
-# SRMR = 0.053 points to a good model fit (SRMR < 0.08).
-
-#_________________________________________________________________________________
-# Create model
+# Create SEM model
 
 m3 <- '
 vpd ~  LST
@@ -52,8 +45,6 @@ clipboard(fit3)
 
 #_________________________________________________________________________________
 # Inspect direct and indirect effects
-
-
 
 m3 <- '
 vpd ~  a*LST
@@ -115,8 +106,6 @@ semPaths(fit3, "std", weighted = FALSE, nCharNodes = 10, shapeMan = "rectangle",
          sizeMan = 8, sizeMan2 = 5, curvePivot = TRUE, layout = "tree2")
 
 
-
-
 #_________________________________________________________________________________
 # Alternative model 2
 
@@ -136,7 +125,4 @@ summary(fit3, standardized=TRUE, fit.measures=TRUE)
 
 semPaths(fit3, "std", weighted = FALSE, nCharNodes = 10, shapeMan = "rectangle",
          sizeMan = 8, sizeMan2 = 5, curvePivot = TRUE, layout = "tree2")
-
-
-
 
