@@ -1,3 +1,5 @@
+// Download factors of fires
+
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(),
     geometry2 = 
@@ -41,8 +43,8 @@ var exportRegion = ee.Geometry(ee.Geometry.Rectangle(-180,30,180,78),null,false)
   
 
 
-var roi_arctic_biomes = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/roi_arctic_biomes_v1");
-var roi_arctic = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/roi_arctic_v1");
+var roi_arctic_biomes = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/roi_arctic_biomes_v1");
+var roi_arctic = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/roi_arctic_v1");
 
 var watersheds = ee.FeatureCollection('WWF/HydroSHEDS/v1/Basins/hybas_5');
 var watersheds = watersheds
@@ -59,13 +61,7 @@ Map.addLayer(roi,{min:0,max:1},'roi',false)
 
 //_______________________________________________________________________________________________________________________
 // SECTION   -  CALL AND MERGE GIMMS PHENO MaximumSeparation
-// var colPHENO20 = ee.ImageCollection("users/adriadescals/LOS_paper/PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p20_wSize60")
 var colPHENO30 = ee.ImageCollection("users/descals_geu/LOS_paper/PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p30_wSize60")
-// var colPHENO40 = ee.ImageCollection("users/descals_geu/LOS_paper/PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p40_wSize60")
-// var colPHENO50 = ee.ImageCollection("users/descals_geu/LOS_paper/PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p50_wSize60")
-// var colPHENO60 = ee.ImageCollection("users/adriadescals/LOS_paper/PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p60_wSize60")
-// print(colPHENO40)
-// var colPHENOall = colPHENO50.merge(colPHENO40).merge(colPHENO30).merge(colPHENO20).merge(colPHENO60)
 var colPHENOall = colPHENO30
   .map(function(im){
     var year = ee.Date(im.get('system:time_start')).get('year') // add year
@@ -96,8 +92,6 @@ var colPHENOmean = ee.ImageCollection(listSites
 // SECTION   - MODIS PHENO CREAF
 var MODISdescals30 = ee.ImageCollection("users/globaloilpalm/_BA/results/PHENO_MODIS_NDVI_MS/PHENO_MODIS_NDVIinterp_MS_p30_wSize60")
   .filter(ee.Filter.calendarRange(2001, 2020, 'year'));
-// var MODISdescals40 = ee.ImageCollection("users/descals_geu/TRENDSarctic/PHENO_MODIS_NDVI_MS/PHENO_MODISSoS_NDVIinterp_snowReclass_MS_p40_wSize30")
-//   .filter(ee.Filter.calendarRange(2001, 2020, 'year'));
 
 var colPHENOall = MODISdescals30//.merge(MODISdescals40)
   .map(function(im){
@@ -459,7 +453,7 @@ var values = values.map(function(ff){
 // Export 
 Export.table.toDrive({
 collection: values,
-description:'ARCTIC_TRENDS_Ta_LST_LSTera5_Rf_Vcomp_Ucomp_Vpd_Cwd_SoS_EoS_NDVI_v3-3',
+description:'ARCTIC_TRENDS_Ta_LST_LSTera5_Rf_Vcomp_Ucomp_Vpd_Cwd_SoS_EoS_NDVI_v1',
 fileFormat: 'CSV'
 });
 
