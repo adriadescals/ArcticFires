@@ -1,7 +1,10 @@
+% Generate figure of direct and indirect effects of fire-related factors 
+% on burned area (Fig. S8)
+
 clear all; close all
 
 vars = {'Temperature','Precipitation','VPD','Length of season','NDVI','Water deficit','Ignitions'};
-E = [0 0.673; 0 -0.057; 0 0.494; 0 0.206; 0 0.173; 0.46 0.206; 0.48 0];
+E = [0 0.673; 0 -0.057; 0 0.494; 0 0.206; 0 0.173; 0.46 0.206; 0.48 0]; % Obtained from 'u01_SEM.R'
 
 [bla indSort] = sort(sum(E,2),'descend');
 
@@ -24,7 +27,7 @@ set(gca,'FontName','Arial','FontSize',13);
 
 
 %% SAVE IMAGE as it appear on screen
-set(gcf, 'PaperPositionMode', 'auto')
-saveas(gcf,['./figures/SEM_direct_indirect_effects.svg'])
+% set(gcf, 'PaperPositionMode', 'auto')
+% saveas(gcf,['./figures/SEM_direct_indirect_effects.svg'])
 
 
