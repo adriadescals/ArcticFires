@@ -1,10 +1,13 @@
+%% Generate Fig. 3 (trends of fire factors) and Fig. 4 (sensitivity of burned
+% area to fire factors)
+
 clear all; close all
 
 addpath('./auxiliary_code')
 
-%%
-% Climate-vegetation trends
-T = readtable('./DATA/ARCTIC_TRENDS_Ta_LST_LSTera5_Rf_Vcomp_Ucomp_Vpd_Cwd_SoS_EoS_NDVI_v3-3.csv');
+%% Load data
+% Climate-vegetation factors of fire
+T = readtable('./DATA/ARCTIC_TRENDS_Ta_LST_LSTera5_Rf_Vcomp_Ucomp_Vpd_Cwd_SoS_EoS_NDVI_v1.csv');
 
 % Ignitions
 IGN = readtable(['./DATA/modis_2001-2020_Russian_Federation_ignitions_v1-1.csv']);
@@ -18,19 +21,17 @@ year = (2001:2020)';
 I = table(year,Count);
 
 % Burned area
-BA = readtable('./DATA/BA_Arctic_allSatellites_v1-4.csv');
+BA = readtable('./DATA/BA_Arctic_allSatellites_v1.csv');
 BAdata = table2array(BA(:,2:7))'./1000000;
 products = BA.Properties.VariableNames;
 products = {products{2:end}};
 BAmedian = nanmedian(BAdata);
 
+T.Ws = sqrt(T.Vcomp.^2 + T.Ucomp.^2); % Calculate wind speed
+T.Wd = mod(180+180/pi.*atan2(T.Vcomp,T.Ucomp),360); % Calculate wind direction
+T.LoS = T.EoS-T.SoS;  % Calculate length of season
 
-%%
-T.Ws = sqrt(T.Vcomp.^2 + T.Ucomp.^2);
-T.Wd = mod(180+180/pi.*atan2(T.Vcomp,T.Ucomp),360);
-T.LoS = T.EoS-T.SoS;
-
-%% save merged layer for SEM
+%% Save merged data for SEM (u01_SEM.R)
 variables = T.Properties.VariableNames;
 OUT = T(20:end,[find(strcmp(variables,'year')) ...
     find(strcmp(variables,'Ta')) ...
@@ -50,11 +51,10 @@ BA = BAmedian(:,20:end)';
 BAlog = log(BA);
 OUT = [OUT array2table(Ign) array2table(BA) array2table(BAlog)];
 if 1
-    writetable(OUT,'./DATA/ARCTIC_TRENDS_merged_v3-3.csv')
+    writetable(OUT,'./DATA/ARCTIC_TRENDS_merged_v1.csv')
 end
 
-%%
-% BA = log(BAmedian);
+%% Force nan values to 0
 BA = BAmedian;
 BA(isnan(BA)) = 0;
 BA(isinf(BA)) = 0;
@@ -67,16 +67,16 @@ BA(isinf(BA)) = 0;
 %     'Vapor pressure deficit','Plant water deficit','Greening (maximum NDVI)','Greening (maximum NDVI)'};
 % UNITS = {'Number of ignitions','m s^-1','°','m s^-1','kPa','mm','1','d'};
 
-%% 
+%% Define variables names and units
 VAR = {'Count','Ta','Rf','LST','vpd','def','ndvi','LoS'}; %,'Ws'
 VARnames = {'IGN','Ta','Rf','LST','VPD','PET-AET','GR','LoS'};
 
 VARnamesLong = {'Fire hazards','Air temperature','Total precipitation','Surface temperature', ...
-    'Vapor pressure deficit','Plant water deficit','Greening (maximum NDVI)','Length of Season'};
+    'Vapor pressure deficit','Plant water deficit','Greening (mean NDVI)','Length of Season'};
 UNITS = {'Number of ignitions','°C','mm','m·s^-1','kPa','mm','1','d'};
 
 
-%% TRENDS
+%% Generate Fig. 3. Trends of fire factors
 STATS = [];
 
 hf = figure('units','normalized','outerposition',[0 0 0.3 1]);
@@ -189,56 +189,7 @@ for ii = 1:length(VAR)
 end
 
 
-%% TREND TA
-figure,
-xlim([1980 2050])
-ivar = 2;
-Y = T.([VAR{ivar}]);
-X = T.year;
- 
-funcType = {'poly1','poly2','exp1'};
-[f gof] = fit(X, Y, 'poly1' );
-
-lm = fitlm(X,Y);
-pvalue = lm.Coefficients.pValue(2)
-
-
-R2 = gof.rsquare; 
-[R pvalR] = corrcoef(f(X),Y);
-R2 = R(1,2)^2;
-pvalR = pvalR(1,2);
-
-
-indMax = 1;
-
-hold on,
-plot(X, Y, '.k')
-% xlim([1980 2022])
-plot(f,'r')
-% plot( f{indMax}, X, Y)
-xlabel(' ')
-ylabel([VARnames{ivar} ' (' UNITS{ivar} ')'])
-legend('hide')
-yline(Y(end))
-yline(9.929)
-% set(gca,'XLim',[1980 2020],'XTick',1980:5:2020)
-% set(gca,'XTickLabelRotation',45)
-% set(gca, 'YGrid', 'off', 'XGrid', 'on')
-
-box on
-
-
-%% Ratio BA/meanBA
-
-figure, 
-plot(X, BA/mean(BA), '.k')
-yline(1,'r')
-grid on
-ylabel('BA/mean(BA)')
-title('Ratio BA/meanBA')
-
-
-%% BA vs OTHER
+%% Generate Fig. 4. Sensitivity of burned area to fire factors
 for isDetrend = [0 1]
     STATS = [];
 hf = figure('units','normalized','outerposition',[0 0 0.3 1]);
@@ -267,9 +218,6 @@ if isDetrend
 else
     sgtitle('NOT DETRENDED')
 end
-
-
-
 
 
 if 1
@@ -395,20 +343,6 @@ display('STATS__________________')
 STATS
 display('__________________')
 end
-% ivar = 2;
-% x1 = T.([VAR{ivar}]);
-% ivar = 3;
-% x2 = T.([VAR{ivar}]);
-% 
-
-
-
-
-
-
-
-
-
 
 
 
