@@ -1,25 +1,28 @@
+%% Extracts CMIP5 data (.nc) and save it in .mat format
+
 clear all; close all;
 
 %% path to data
-pathData = 'C:\Users\adria\OneDrive - CREAF\PALM_PROJECT\_FIRE\_ARCTICfires_paper\R0_raw_backup\CMIP5\bio\dataset-sis-biodiversity-cmip5-global\'
+% CMIP data can be downloaded at https://doi.org/10.24381/cds.a37fecb7
+% The data is not provided in the GitHub repository
+pathData = '../large_datasets/CMIP5/';
 
-
-%%
+%% Define region of interest
 arcticROI = imread('./DATA/roi_arctic_01degrees.tif');
 arcticROI = [arcticROI; zeros(12,720)];
 figure, imagesc(arcticROI)
 
-%%
+%% Define time period and model
 RCPyears = 1950:2100;
 ishistoric = RCPyears<2005;
 
-rcpmod = 'r2i1p1';
-modeltype = 'es';
+% rcpmod = 'r2i1p1';
+% modeltype = 'es';
 
 rcpmod = 'r1i1p1';
 modeltype = 'cc';
 
-%% TA RCP45
+%% Extact TA RCP45 
 pathFile = [pathData 'temperature_monthly-mean_hadgem2-' modeltype '_rcp45_' rcpmod '_1950-2100_v1.0' '.nc'];
 % tsHS_summer1 = extractCMIP5(pathFile, arcticROI2);
 
@@ -52,7 +55,7 @@ ta = uint32((ta+273.15)*1000);
 
 save(['./DATA/TAS_summer_gridded_hadgem2-' modeltype '_rcp45_' rcpmod '_1950-2100'],'ta','RCPyears','ishistoric')
 
-%% TA RCP85
+%% Extact TA RCP85
 pathFile = [pathData 'temperature_monthly-mean_hadgem2-' modeltype '_rcp85_' rcpmod '_1950-2100_v1.0' '.nc'];
 % tsHS_summer1 = extractCMIP5(pathFile, arcticROI2);
 
@@ -85,8 +88,7 @@ ta = uint32((ta+273.15)*1000);
 
 save(['./DATA/TAS_summer_gridded_hadgem2-' modeltype '_rcp85_' rcpmod '_1950-2100'],'ta','RCPyears','ishistoric')
 
-%% Save a saple image for GEE
-
+%% Save a sample image for GEE
 figure, imagesc(arcticROI(1:70,:))
 figure, imagesc(DATA(1:70,:,1))
 
@@ -98,19 +100,7 @@ R = georasterref('RasterSize', [rows cols 1], ...
 geotiffwrite('./DATA/sample_image_RCP_hadgem2',DATA(:,:,1),R)
 
 
-%% Correct bias TA
-% T = readtable('data.csv');
-% 
-% [bla, indERA, indRCP] = intersect(T.yy,1950:2004);
-% me = mean(tsRCP85_summer(indRCP)'-T.Ta(indERA));  
-% tsRCP85_summer = tsRCP85_summer-me;
-% 
-% [bla, indERA, indRCP] = intersect(T.yy,1950:2000);
-% me = mean(tsRCP45_summer(indRCP)'-T.Ta(indERA));  
-% tsRCP45_summer = tsRCP45_summer-me;
-    
-
-%% Save data
+%% Save data in .mat
 save('./DATA/TAS_summer_hadgem2_rcp45_rcp85','tsRCP45_summer','tsRCP85_summer','RCPyears','ishistoric')
 
 
