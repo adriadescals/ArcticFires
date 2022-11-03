@@ -1,53 +1,56 @@
+%% Generate supplementary figure 6. Histograms of ignition and active fire detections, 
+% and the convective available potential energy in the Siberian Arctic.
+
 clear all; close all;
 
-P = readtable('.\DATA\BA_Arctic_FIRMS_perimeters_v1.csv');
+%% Load hourly CAPE data averaged over the Siberian Arctic
+load('./DATA/Arctic_CAPE_hourly_2001-2020','meanCAPE','doyCAPE')
 
-META = [];
-OUT = [];
+%% Load FIRMS ignitions
+IGN = readtable(['./DATA/modis_2001-2020_Russian_Federation_ignitions_v1-1.csv']);
+indOk = IGN.lat>66.5 & IGN.lon>85; % Define region of interest
+IGN(not(indOk),:) = [];
 
-for yy = 2008:2020;
+%% Load annual burned area
+BA = readtable('./DATA/BA_Arctic_allSatellites_v1.csv');
+BAdata = table2array(BA(:,2:7))'./1000000; % Convert to Mha
+products = BA.Properties.VariableNames;
+products = {products{2:end}};
+BAdata = nanmedian(BAdata);
+BAdata = BAdata(end-19:end);
 
-    BA = readtable(['./DATA/ERA5hourly/ERA5_ignitions_' num2str(yy) '.csv']);
+%% Generate figure
+for iplot = 1:20 % years from 2001 to 2020
 
-    BA.Properties.VariableNames
+doys2020frims = IGN.doy(IGN.year==iplot+2000);
+doysUniquefirms = unique(doys2020frims);
+FIRMSacc = [];
+for ii = 1:length(doysUniquefirms)
+    FIRMSacc = [FIRMSacc sum(doys2020frims<doysUniquefirms(ii))];
+end
+FIRMSacc = FIRMSacc./max(FIRMSacc);
+FIRMSacc = [FIRMSacc 1];
+doysUniquefirms = [doysUniquefirms; 244];
 
-    % BA(BA.lon<138,:) = []
+figure('units','normalized','outerposition',[0.2 0.2 0.16 0.35]), hold on
+    hist(IGN.doy(IGN.status==1 & IGN.year==iplot+2000),365,'FaceColor','black','EdgeColor','black')
+    plot(121:0.0417:244,meanCAPE(3:end,iplot)/10,'.r')
+    plot(doysUniquefirms,FIRMSacc*40,'c','LineWidth',2.5)
+    ylim([0 40])
+    xlim([121 244 ])
+    box on
+    xlabel('DoY')
+    title([num2str(iplot+2000) ' (' num2str(round(BAdata(iplot),2)) ' Mha)'])
+    xline(152)
+    
+set(gca,'XTickLabelRotation',45)
+set(gca,'FontName','Arial','FontSize',12);
 
-
-    ids = unique(BA.fireid);
-
-    for ii = 1:length(ids)
-        indP = find(P.fireid==ids(ii));
-        indP = indP(1);
-
-        ind = BA.fireid==ids(ii);
-        BAii = BA(ind,:);
-        BAii = sortrows(BAii,'date1');
-
-        doyGEE = BAii.date1; % dateGEE/86400000
-        doyMatlab = doyGEE+datenum(1970,1,1);
-        [YY,MM,DD] = datevec(doyMatlab);
-        doy = doyMatlab-datenum(YY-1,12,31);
-
-        minDoy = P.minDoy(indP);
-        maxDoy = P.maxDoy(indP)+1;
-
-
-        maxDoy2 = minDoy;
-        minDoy2 = minDoy-30;
-
-        BAii1 = BAii(doy>minDoy(1) & doy<maxDoy(1),[3 9 10 11 12]);
-        BAii2 = BAii(doy>minDoy2(1) & doy<maxDoy2(1),[3 9 10 11 12]);
-
-        if not(isempty(BAii2.total_precipitation_hourly)) & not(isempty(BAii1.temperature_2m-273.15)) ...
-                & not(isempty(BAii2.v_component_of_wind_10m)) & not(isempty(BAii1.u_component_of_wind_10m))
-            META = [META; ids(ii) yy];
-            OUT = [OUT; P.BurnedArea(indP) nanmax(BAii1.temperature_2m-273.15) ...
-                nanmax(BAii2.total_precipitation_hourly) ...
-                nanmean(BAii1.v_component_of_wind_10m)  nanmean(BAii1.u_component_of_wind_10m)];
-        end
-    end
+% % SAVE IMAGE as it appear on screen
+% set(gcf, 'PaperPositionMode', 'auto')
+% saveas(gcf,['./figures/CAPE_ignitions_yy' num2str(iplot+2000) '.png'])
 
 end
+    
 
-save('./DATA/STATS_ERA5hourly_ignitions','META','OUT')
+
