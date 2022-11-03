@@ -1,3 +1,5 @@
+// Land Surface Phenology estimation with MODIS NDVI
+
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: #d63000 */ee.Geometry.Point([150.03741722106932, 70.12262017334814]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -379,7 +381,7 @@ if (exportResults){
   Export.image.toAsset({
     image: exportImage,
     description: 'PHENO_MODIS_NDVI_MS_p'+(th*100)+'_wSize'+wSize+'_im'+year,
-    assetId: '_BA/results/PHENO_MODIS_NDVI_MS/PHENO_MODIS_NDVIinterp_MS_p'+(th*100)+'_wSize'+wSize+'/im'+year,
+    assetId: 'PHENO_MODIS_NDVI_MS/PHENO_MODIS_NDVIinterp_MS_p'+(th*100)+'_wSize'+wSize+'/im'+year,
     scale: scaleOut,
     crs: 'EPSG:4326',
     region: exportRegion,
