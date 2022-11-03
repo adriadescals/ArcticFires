@@ -1,16 +1,17 @@
+%% Generate Fig. 2. Annual burned area in the Siberian Arctic
+
 clear all; close all;
 
 years = 1982:2020; 
 
-
-%% STATS
-BA = readtable('./DATA/BA_Arctic_allSatellites_v1-4.csv');
+%% Calculate statistics of burned area
+BA = readtable('./DATA/BA_Arctic_allSatellites_v1.csv');
 BAdata = table2array(BA(:,2:7))'./1000000;
 products = BA.Properties.VariableNames;
 products = {products{2:end}};
 BAsiberia = nanmedian(BAdata);
 
-BA = readtable('./DATA/BA_Circumpolar_allSatellites_v1-4.csv');
+BA = readtable('./DATA/BA_Circumpolar_allSatellites_v1.csv');
 BAdata = table2array(BA(:,2:7))'./1000000;
 products = BA.Properties.VariableNames;
 products = {products{2:end}};
@@ -24,8 +25,8 @@ display(['Ratio BA Siberia2019-2020/Siberia1982-2020: ' num2str(100*nansum(BAsib
 display(' ')
 
 
-%% ALL 
-BA = readtable('./DATA/BA_Arctic_allSatellites_v1-4.csv');
+%% Annual burned area in the Siberian Arctic
+BA = readtable('./DATA/BA_Arctic_allSatellites_v1.csv');
 BAdata = table2array(BA(:,2:7))'./1000000;
 products = BA.Properties.VariableNames;
 products = {products{2:end}};
@@ -47,26 +48,28 @@ ylim([0 3])
 
 
 
-%% peatlands
-BA = readtable('./DATA/BA_Organic_allSatellites_v1-4.csv');
+%% Annual burned area in carbon-rich peatlands
+BA = readtable('./DATA/BA_Organic_allSatellites_v1.csv');
 
 BAdata = table2array(BA(:,2:7))'./1000000;
 products = BA.Properties.VariableNames;
 products = {products{2:end}};
 BAmedian = nanmedian(BAdata);
 
+if 0
+    figure('units','normalized','outerposition',[0 0.3 0.8 0.4]), hold on
+    bar(BAdata', 'BarWidth', 1)
+    set(gca,'XTick',1:length(years))
+    set(gca,'XTickLabel',years)
+    set(gca,'XTickLabelRotation',45)
 
-figure('units','normalized','outerposition',[0 0.3 0.8 0.4]), hold on
-bar(BAdata', 'BarWidth', 1)
-set(gca,'XTick',1:length(years))
-set(gca,'XTickLabel',years)
-set(gca,'XTickLabelRotation',45)
+    h=gca; h.XAxis.TickLength = [0 0];
+    h.YGrid = 'on';
+    ylabel('Burned area (Mha)')
+    set(gca,'fontsize',14)
+    ylim([0 1])
 
-h=gca; h.XAxis.TickLength = [0 0];
-h.YGrid = 'on';
-ylabel('Burned area (Mha)')
-set(gca,'fontsize',14)
-ylim([0 1])
+end
 
 %
 figure('units','normalized','outerposition',[0 0.3 0.8 0.4]), hold on
@@ -78,13 +81,16 @@ set(gca,'XTickLabelRotation',45)
 h=gca; h.XAxis.TickLength = [0 0];
 h.YGrid = 'on';
 ylabel('Burned area (Mha)')
+ylim([0 1])
+
 
 % SAVE IMAGE as it appear on screen
 % set(gcf, 'PaperPositionMode', 'auto')
 % saveas(gcf,['./figures/chart_BApeat.svg'])
 % set(gca,'fontsize',14)
-% ylim([0 11])
 
 
-
+% STATS
+nansum(BAmedian(end-7:end))/nansum(BAmedian); % BA peat (in %) last 8 years
+BAmedian(end)/nansum(BAmedian); % BA peat (in %) in 2020
 
