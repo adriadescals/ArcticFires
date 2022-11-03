@@ -1,4 +1,6 @@
 % estimate carbon emissions from tier1 ippc method
+%
+% Author: Adrià Descals - CREAF 2022
 
 function [C CO2eq C_std CO2eq_std C_dist CO2eq_dist] = tier1_ippc(BAtundra, BAboreal, niter)
 
