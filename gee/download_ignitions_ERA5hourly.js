@@ -9,7 +9,7 @@ for (var yy=2001; yy<=2020; yy++){
 //_______________________________________________________________________________________________________________________
 // SECTION   - Call FIRMS data
 
-var firms = ee.FeatureCollection("users/globaloilpalm/_BA/results/modis_2001-2020_Russian_Federation_ignitions_v1-1")
+var firms = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/modis_2001-2020_Russian_Federation_ignitions_v1-1")
   .map(function(ff){
     var coords = ff.geometry().centroid(1).coordinates()
     return ff.set('lat',coords.get(1)).set('lon',coords.get(0))
