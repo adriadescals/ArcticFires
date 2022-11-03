@@ -1,3 +1,5 @@
+# Structural equation modelling (SEM) for factors of fire
+
 
 library(semTools)
 library(lavaan)
