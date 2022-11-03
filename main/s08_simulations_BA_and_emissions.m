@@ -1,8 +1,9 @@
+%% Simulations of burned area and fire emissions
+
 clear all; close all
 
 addpath('./auxiliary_code')
 
-plotResults = false;
 saveresults = true;
 niter = 10^3;
 
@@ -18,7 +19,7 @@ TREND_BApeattundra = [];
 %% load data for model
 
 % Trends
-T = readtable('./DATA/ARCTIC_TRENDS_Ta_LST_LSTera5_Rf_Vcomp_Ucomp_Vpd_Cwd_SoS_EoS_NDVI_v3-3.csv');
+T = readtable('./DATA/ARCTIC_TRENDS_Ta_LST_LSTera5_Rf_Vcomp_Ucomp_Vpd_Cwd_SoS_EoS_NDVI_v1.csv');
 
 IGN = readtable(['./DATA/modis_2001-2020_Russian_Federation_ignitions_v1-1.csv']);
 indOk = IGN.lat>66.5 & IGN.lon>85;
@@ -32,7 +33,7 @@ I = table(year,Count);
 
 
 % ERA5 ignition data
-ERA5 = readtable('./DATA/Arctic_ignitions_monthly_2001-2020_ERA_TA-RF-VPD-LST_v1-1.csv');
+ERA5 = readtable('./DATA/Arctic_ignitions_monthly_2001-2020_ERA_TA-RF-VPD-LST_v1.csv');
 ERA5 = ERA5(:,2:end-1);
 
 ERA = readtable('./DATA/BA_Arctic_FIRMS_perimeters_v1');
@@ -93,9 +94,6 @@ ROI = imread('./DATA/roi_arctic_01degrees.tif');
 lagIgn = 0;
 % figure, imagesc(ROI(1:70,:,1))
 ROI = ROI(:)==1;
-
-
-
 
 % peatlands SOC
 PEAT0 = imread('./DATA/peatland_SOC_01degrees.tif');
@@ -194,32 +192,10 @@ annualIGN = [annualIGN nignitions];
 %% model BA
 A = nan(1,nignitions);
 
-
-% method1
-% randNum1 = rand(length(OCCdens),1);
-% indIgnitions = randi(length(TA),1,nignitions);
-
-% method2
-% randNum1 = rand(length(OCCdens),1);
-% [bla indIgnitions] = sort(OCCdens,'descend');
-% indIgnitions = indIgnitions(1:nignitions);
-
-% method3
 randNum1 = rand(length(OCCdens),1);
 ignprob = OCCdens.*randNum1;
 [bla indIgnitions] = sort(ignprob,'descend');
 indIgnitions = indIgnitions(1:nignitions);
-
-% method4 // method 3 but with permutation and including TA
-% indIgnitions = nan(nignitions,1);
-% randNum1 = rand(length(OCCdens),nignitions);
-% for ii = 1:nignitions
-%     randNum1i = randNum1(:,ii);
-%     ignprob = OCCdens.*randNum1i;
-%     [bla indmaxprob] = max(ignprob);
-% end
-% unique(indIgnitions)
-
 
 randNum2 = normrnd(0,1,nignitions,1);
 
@@ -231,7 +207,6 @@ Ypred = YpredMean+(p12(:,2)-p12(:,1)).*randNum2/2;
 Ypred(Ypred<0) = 0;
 
 ba_event = exp(Ypred);
-
 
 ba_event(ba_event>140000) = 140000;
 
@@ -252,16 +227,6 @@ annualBApeattundra = [annualBApeattundra sum(ba_event(PEATign>200 & TUNDRAign)).
  end
 
 %% summary
-% annualBA = annualBA+annualBA*0.15;
-
-if plotResults
-
-    figure, hist(annualBA,50)
-
-    pause
-    close all
-end
-
 display(' ')
 display(['Year:' num2str(yy)])
 display(['TaSummer:' num2str(TaSummer) '  TaEvent: ' num2str(mean(TaEvent2))])
@@ -330,17 +295,4 @@ ylabel('CO2-eq ALL&PEAT (Tg)')
 close all
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
