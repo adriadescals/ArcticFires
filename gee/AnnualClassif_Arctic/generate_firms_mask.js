@@ -16,10 +16,10 @@ var geometry =
 
 
 
-var FIRMS_modis = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/FIRMS_modis_Russian_Federation_above60degrees");
-var FIRMS_viirs = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/FIRMS_viirs_Russian_Federation_above60degrees");
+var FIRMS_modis = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/FIRMS_modis_Russian_Federation_above60degrees");
+var FIRMS_viirs = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/FIRMS_viirs_Russian_Federation_above60degrees");
 
-var grid = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/grid_arctic_UTM_v1");
+var grid = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/grid_arctic_UTM_v1");
 Map.addLayer(grid,{min:0,max:1},'grid Arctic',false)
 print(grid)
 var tilesArctic = [];
@@ -113,7 +113,7 @@ if (1){
   Export.image.toAsset({
     image: exportImage,
     description: 'FIRMS_ArcticMask_1km_20012020_v1_cell_'+itile,
-    assetId: '_BA/results/FIRMS_ArcticMask_1km_20012020_v1/cell_'+itile,
+    assetId: 'FIRMS_ArcticMask_1km_20012020_v1/cell_'+itile,
     scale: 100,
     crs: tile_crs,
     region: roi.geometry(),
@@ -129,15 +129,3 @@ if (1){
 
     
     
-    
-    
-    
-
-
-
-
-
-
-
-
-
