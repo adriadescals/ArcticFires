@@ -13,7 +13,7 @@ var scale = 55659.7453966// 0.5°
 //_______________________________________________________________________________________________________________________
 // SECTION   - Download ROI Arctic
 
-var roi_arctic = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/roi_arctic_v1")
+var roi_arctic = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/roi_arctic_v1")
   .map(function(ff){
    return ff.set('empty',1)
   });
@@ -41,7 +41,7 @@ Export.image.toDrive({
 //_______________________________________________________________________________________________________________________
 // SECTION   - Download biomes Arctic
 
-var roi_arctic_biomes = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/roi_arctic_biomes_v1")
+var roi_arctic_biomes = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/roi_arctic_biomes_v1")
   .map(function(ff){
    return ff.set('empty',1)
   });
@@ -67,7 +67,7 @@ Export.image.toDrive({
 //_______________________________________________________________________________________________________________________
 // SECTION   - Download peatlands SOC
 
-var peatland_carbonStorage = ee.Image("users/globaloilpalm/_BA/auxiliary/Histel_and_histosol_SOC_hg_per_sqm")
+var peatland_carbonStorage = ee.Image("users/descals_geu/shared/arctic_fires/Histel_and_histosol_SOC_hg_per_sqm")
 var visPeat = {"min":0,"max":300,"palette":["ffffff","00b927"]};
 Map.addLayer(peatland_carbonStorage,visPeat,'peatland_carbonStorage (GFAS projection)',false)
 
@@ -153,14 +153,14 @@ if (0){
   });
 
   var grid = grid.filterBounds(roi_arctic)
-  Export.table.toAsset(grid, 'grid_05degrees', '_BA/auxiliary/grid_05degrees')
+  Export.table.toAsset(grid, 'grid_05degrees', 'shared/grid_05degrees')
 
 }else{
-  var grid = ee.FeatureCollection('users/globaloilpalm/_BA/auxiliary/grid_05degrees')
+  var grid = ee.FeatureCollection('users/descals_geu/shared/arctic_fires/grid_05degrees')
 }
 
 
-var firms = ee.FeatureCollection("users/globaloilpalm/_BA/results/modis_2001-2020_Russian_Federation_ignitions_v1-1")
+var firms = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/modis_2001-2020_Russian_Federation_ignitions_v1-1")
   .map(function(ff){
     var coords = ff.geometry().centroid(1).coordinates()
     return ff.set('lat',coords.get(1)).set('lon',coords.get(0))
@@ -213,7 +213,7 @@ Map.addLayer(ignitions,{color:'green'},'ignitions',false)
 // SECTION   - Download ROI Arctic for CAPE
 
 
-var roi_arctic = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/roi_arctic_v1")
+var roi_arctic = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/roi_arctic_v1")
   .map(function(ff){
    return ff.set('empty',1)
   });
