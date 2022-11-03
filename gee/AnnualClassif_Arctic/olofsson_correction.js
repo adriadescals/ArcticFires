@@ -13,7 +13,7 @@ var randomSeed = 1234567
 
 print('___________ RefDataset SIZES ___________')
 
-  var validationSamples = ee.FeatureCollection('users/globaloilpalm/_BA/validation/ref_dataset_arctic_v2-2')
+  var validationSamples = ee.FeatureCollection('users/descals_geu/shared/arctic_fires/ref_dataset_arctic_v2-2')
 
   print(validationSamples.size())
   print(validationSamples.first())
@@ -511,7 +511,7 @@ var targetValidated = targetValidated.map(function(ff){
   return ff.set('lat',coords.get(1)).set('lon',coords.get(0))
 }).sort('lon').sort('lat')
 
-Export.table.toAsset(targetValidated, 'GEE-REFERENCE_DATASET_Arctic_yy2019-2020_subsamplesOlofsson_TM-S2_TM-Landsat_MODIS_v1', '_BA/validation/REFERENCE_DATASET_Arctic_yy2019-2020_subsamplesOlofsson_TM-S2_TM-Landsat_MODIS_C3SBA10_v2-2')
+Export.table.toAsset(targetValidated, 'GEE-REFERENCE_DATASET_Arctic_yy2019-2020_subsamplesOlofsson_TM-S2_TM-Landsat_MODIS_v1', 'REFERENCE_DATASET_Arctic_yy2019-2020_subsamplesOlofsson_TM-S2_TM-Landsat_MODIS_C3SBA10_v2-2')
 
 // Export 
 Export.table.toDrive({
