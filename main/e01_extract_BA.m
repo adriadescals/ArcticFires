@@ -1,7 +1,9 @@
-clear all; close all;
-
+%% Extract and combines annual burned areas (in csv files) from different satellite sources 
+%
 % Burned areas (in csv files) were extracted using the following script:
 % https://code.earthengine.google.com/d00964c202fecb84bb7f78a3b1a7c69b
+
+clear all; close all;
 
 years = (1982:2020);
 SAT = {'FireCCILT11','MCD64A1','FireCCI51','C3SBA10','Landsat','Sentinel-2'};
@@ -11,8 +13,6 @@ BAall = nan(length(years),length(SAT));
 BAtundra = nan(length(years),length(SAT));
 BAorganic = nan(length(years),length(SAT));
 BAcircump = nan(length(years),length(SAT));
-
-
 
 for isat = 1:4
     T = readtable(['./DATA/Arctic_BA_' SAT{isat} '.csv']);
@@ -38,7 +38,6 @@ BAcircump(years==1994,1) = NaN;
 
 
 %% Extract Landsat 2013-2017
-  
 BAsat = zeros(1,length(2013:2020));
 BAsat_tun = zeros(1,length(2013:2020));
 BAsat_org = zeros(1,length(2013:2020));
@@ -50,17 +49,11 @@ for itile = 0:39
     BAsat_org = BAsat_org+table2array(T(4,2:(end-2)));
 end
 
-
 [bla,ind1,ind2] = intersect(years,yearsi);
 BAall(ind1,5) = BAsat'./10000;
 BAtundra(ind1,5) = BAsat_tun'./10000;
 BAorganic(ind1,5) = BAsat_org'./10000;
 BAcircump(ind1,5) = BAsat'./10000;
-
-% % Remove BA before Landsat-8 era
-% BAall(years<2013,5) = NaN;
-% BAsat_tun(years<2013,5) = NaN;
-
 
 
 %% Extract Sentinel-2 2019-2020 
@@ -76,14 +69,11 @@ for itile = 0:39
     BAsat_org = BAsat_org+table2array(T(4,2:(end-2)));
 end
 
-
 [bla,ind1,ind2] = intersect(years,yearsi);
 BAall(ind1,6) = BAsat'./10000;
 BAtundra(ind1,6) = BAsat_tun'./10000;
 BAorganic(ind1,6) = BAsat_org'./10000;
 BAcircump(ind1,6) = BAsat'./10000;
-
-
 
 
 %% SAVE DATA
@@ -99,20 +89,7 @@ OUT3.Properties.VariableNames = {'Year',SAT{:}};
 OUT4 = array2table([years', BAcircump]);
 OUT4.Properties.VariableNames = {'Year',SAT{:}};
 
-
-writetable(OUT,'./DATA/BA_Arctic_allSatellites_v1-4.csv')
-writetable(OUT2,'./DATA/BA_Tundra_allSatellites_v1-4.csv')
-writetable(OUT3,'./DATA/BA_Organic_allSatellites_v1-4.csv')
-writetable(OUT4,'./DATA/BA_Circumpolar_allSatellites_v1-4.csv')
-
-
-
-% r = BAtundra./BAall;
-% figure, hist(r(:),30)
-
-
-
-
-
-
-
+writetable(OUT,'./DATA/BA_Arctic_allSatellites_v1.csv')
+writetable(OUT2,'./DATA/BA_Tundra_allSatellites_v1.csv')
+writetable(OUT3,'./DATA/BA_Organic_allSatellites_v1.csv')
+writetable(OUT4,'./DATA/BA_Circumpolar_allSatellites_v1.csv')
