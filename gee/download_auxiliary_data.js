@@ -1,3 +1,4 @@
+// Download auxiliary data
 
 var sampleRCP = ee.Image('users/globaloilpalm/_BA/auxiliary/sample_image_RCP_hadgem2')
 Map.addLayer(sampleRCP,{min:-40,max:-7},'sampleRCP',false)
