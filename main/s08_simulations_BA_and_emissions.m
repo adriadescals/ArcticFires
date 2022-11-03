@@ -44,7 +44,7 @@ ERA.BAlog = log(ERA.BurnedArea);
 OUT = [];
 for ii = 1:height(ERA)
     Ti = ERA(ii,:);
-    ERA5i = ERA5(Ti.fireid==ERA5.fireid & Ti.year==ERA5.yy,[5 6:11]);
+    ERA5i = ERA5(Ti.fireid==ERA5.fireid & Ti.year==ERA5.year,[5 6:11]);
     OUT = [OUT; [Ti ERA5i(1,:)]];
 end
 
