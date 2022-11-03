@@ -1,3 +1,5 @@
+// Land surface phenology estimation with GIMMS NDVI
+
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var ROI = /* color: #d63000 */ee.Geometry.Point([-83.56535312173072, 37.01296805236159]),
     geometry = /* color: #d63000 */ee.Geometry.Point([15.27608933129168, 57.5914494116362]),
