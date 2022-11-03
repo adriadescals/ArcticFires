@@ -1,16 +1,15 @@
+// Download burned area products for the Siberian Arctic
 
 Map.setOptions('satellite') 
-
-
 
 //_______________________________________________________________________________________________________________________
 // SECTION   - DEFINE ROI 
 
-var roi_arctic_v1 = ee.FeatureCollection('users/globaloilpalm/_BA/auxiliary/roi_arctic_v1')
+var roi_arctic_v1 = ee.FeatureCollection('users/descals_geu/shared/arctic_fires/roi_arctic_v1')
 var roi_arctic_v1 = ee.FeatureCollection(ee.Feature(roi_arctic_v1.geometry(),{'BIOME':'ALL'}));
 Map.addLayer(roi_arctic_v1,{min:0,max:1},'roi_arctic_v1',false)
 
-var ecoregions = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/roi_arctic_biomes_v1")
+var ecoregions = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/roi_arctic_biomes_v1")
 var ecoregions = ee.FeatureCollection(ecoregions
   .filter(ee.Filter.eq('isArctic',1))
   .geometry()).map(function(ff){ return ff.set('BIOME','Tundra')})
@@ -19,8 +18,8 @@ var ecoregions = ee.FeatureCollection(ecoregions
 
 if (0){
   // Peatlands
-  var peatland_carbonStorage = ee.Image("users/globaloilpalm/_BA/auxiliary/Histel_SOC_hg_per_sqm")
-    .add(ee.Image("users/globaloilpalm/_BA/auxiliary/Histosol_SOC_hg_per_sqm"));
+  var peatland_carbonStorage = ee.Image("users/descals_geu/shared/arctic_fires/Histel_SOC_hg_per_sqm")
+    .add(ee.Image("users/descals_geu/shared/Histosol_SOC_hg_per_sqm"));
   var visPeat = {"opacity":1,"bands":["b1"],"min":0,"max":200,"palette":["ffffff","00b927"]};
 
   var peatland_carbonStorage = peatland_carbonStorage.reproject({crs: 'EPSG:4326', scale:10000}) 
@@ -34,14 +33,14 @@ if (0){
       Export.image.toAsset({
         image: peatland_carbonStorage.rename('SOC').uint32(),
         description: 'Histel_and_histosol_SOC_hg_per_sqm',
-        assetId: '_BA/auxiliary/Histel_and_histosol_SOC_hg_per_sqm',
+        assetId: 'shared/arctic_fires/Histel_and_histosol_SOC_hg_per_sqm',
         scale: 10000,
         region: exportRegion,
         maxPixels: 10e10
         });
 }else{
 
-  var peatland_carbonStorage = ee.Image("users/globaloilpalm/_BA/auxiliary/Histel_and_histosol_SOC_hg_per_sqm")
+  var peatland_carbonStorage = ee.Image("users/descals_geu/shared/arctic_fires/Histel_and_histosol_SOC_hg_per_sqm")
   var visPeat = {"min":0,"max":300,"palette":["ffffff","00b927"]};
   Map.addLayer(peatland_carbonStorage,visPeat,'peatland_carbonStorage (GFAS projection)',false)
 }
@@ -67,7 +66,7 @@ Map.addLayer(roi_arctic_v1_ecoregions,{min:0,max:1},'roi_arctic_v1_ecoregions',t
 
 
 
-var grid = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/grid_arctic_UTM_v1");
+var grid = ee.FeatureCollection("users/descals_geu/shared/arctic_fires/grid_arctic_UTM_v1");
 
 var tilesArctic = [];
 for (var ii=0; ii<40; ii++){
@@ -175,9 +174,8 @@ Map.addLayer(ba_year_landsat,classVisParam,'Landsat post v'+iversionLandsat,fals
 var classVisParam = {"min":29,"max":30,"palette":["ff0000","ff00ff"]};
 
 var iversionS2 = '9-2-4'
-
-var outClass2019 = ee.ImageCollection("users/annaobla/S2_siberia_annualClassification_20192020_v"+iversionS2+"_post").filter(ee.Filter.eq('yy',2019)).mosaic().multiply(29).uint8();
-var outClass2020 = ee.ImageCollection("users/annaobla/S2_siberia_annualClassification_20192020_v"+iversionS2+"_post").filter(ee.Filter.eq('yy',2020)).mosaic().multiply(30).uint8();
+var outClass2019 = ee.ImageCollection("users/descals_geu/shared/arctic_fires/S2_siberianArctic_annualClassification_20192020").filter(ee.Filter.eq('yy',2019)).mosaic().multiply(29).uint8();
+var outClass2020 = ee.ImageCollection("users/descals_geu/shared/arctic_fires/S2_siberianArctic_annualClassification_20192020").filter(ee.Filter.eq('yy',2020)).mosaic().multiply(30).uint8();
 var ba_year_s2 = ee.ImageCollection.fromImages([outClass2019,outClass2020]).min()
 Map.addLayer(ba_year_s2,classVisParam,'Sentinel-2 v'+iversionS2+" post",false);
 
@@ -567,14 +565,4 @@ var arcticLine = /* color: #d63000 */ee.Geometry.LineString(
         [[-179.9, 66.5],
          [179.9, 66.5]],'EPSG:4326',false);
 Map.addLayer(arcticLine,{color:'dc9a9a'},'Arctic line',false)
-
-
-
-
-
-
-
-
-
-
 
