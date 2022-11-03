@@ -1,17 +1,19 @@
+%% Generate supplementary figure 2. Comparison between FireCCILT11, derived 
+% from AVHRR, and MCD64A1 and FireCCI51 burned-area products derived from MODIS.
+
 clear all; close all;
 
-%% Correlation AVHRR with MODIS BA
-
-BA = readtable('.\data\BA_Arctic_allSatellites_v1-4.csv');
-
+%% Load annual burned area
+BA = readtable('.\data\BA_Arctic_allSatellites_v1.csv');
 BA(isnan(BA.MCD64A1) | isnan(BA.FireCCI51) | isnan(BA.FireCCILT11),:) = [];
 
+% Convert to Mha
 AVHRR = BA.FireCCILT11/1000000;
 FireCCI51 = BA.FireCCI51/1000000;
 MCD64A1 = BA.MCD64A1/1000000;
 
+%% Scatterplot
 figure('units','normalized','outerposition',[0 0.3 0.5 0.4]), hold on
-
 subplot(1,2,1), hold on,
 xlim([0 1.1])
 ylim([0 1.1])
@@ -66,7 +68,7 @@ ylim([0 1.1])
 set(gca,'FontName','Arial');
 
 
-set(gcf, 'PaperPositionMode', 'auto')
-saveas(gcf,['./figures/comparison_AVHRR_MODIS.svg'])
+% set(gcf, 'PaperPositionMode', 'auto')
+% saveas(gcf,['./figures/comparison_AVHRR_MODIS.svg'])
 
 
