@@ -361,7 +361,7 @@ if (exportResults){
   Export.image.toAsset({
     image: exportImage,
     description: 'PHENO_GIMMS_NDVI_MS_p'+(th*100)+'_wSize'+wSize+'_im'+year,
-    assetId: 'LOS_paper/PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p'+(th*100)+'_wSize'+wSize+'/im'+year,
+    assetId: 'PHENO_GIMMS_NDVI_MS/PHENO_GIMMS_NDVIinterp_snowReclass_MS_p'+(th*100)+'_wSize'+wSize+'/im'+year,
     scale: scaleOut,
     region: exportRegion,
     maxPixels:3427747576 
