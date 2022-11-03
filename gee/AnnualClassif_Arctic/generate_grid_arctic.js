@@ -126,9 +126,6 @@ var filtArctic = ee.Geometry.Polygon(
           [192.3624631237679, 66.81959954580103],
           [192.3624631237679, 77.7824697795707]]], null, false);
           
-var grid = ee.FeatureCollection("users/globaloilpalm/_BA/auxiliary/grid_siberia_ScaleGrid_800000_v3").filterBounds(filtArctic);
-Map.addLayer(grid,{min:0,max:1},'grid Siberia',false)
-
 
 
 var geometry3 = ee.Geometry.Polygon(
@@ -196,5 +193,5 @@ var out = ee.FeatureCollection(out.toList(out.size()).zip(ee.List.sequence(0, ou
 
 
 print(out)
-Export.table.toAsset(out, 'grid_arctic_UTM_v1', '_BA/auxiliary/grid_arctic_UTM_v1')
+Export.table.toAsset(out, 'grid_arctic_UTM_v1', 'grid_arctic_UTM_v1')
 
